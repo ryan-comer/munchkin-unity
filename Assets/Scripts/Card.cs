@@ -13,20 +13,13 @@ public class Card : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        getFrontImage();
+
     }
 
     // Update is called once per frame
     void Update()
     {
         
-    }
-
-    // Get the front image for the card
-    // Based on naming convention
-    private void getFrontImage()
-    {
-
     }
 
 }

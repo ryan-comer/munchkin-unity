@@ -61,10 +61,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Card.cs" />
-    <Compile Include="Assets\Scripts\DeckController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\DeckController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\GameController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\HandController.cs" />
     <Compile Include="Assets\Scripts\Dice.cs" />
-    <Compile Include="Assets\Scripts\GameController.cs" />
-    <Compile Include="Assets\Scripts\HandController.cs" />
     <Compile Include="Assets\Scripts\MatchWidthofViewport.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/Ryan Comer/Documents/Munchkin/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>

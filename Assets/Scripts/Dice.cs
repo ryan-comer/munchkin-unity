@@ -48,8 +48,6 @@ public class Dice : MonoBehaviour
             {
                 if(hit.transform.root.transform == transform)
                 {
-                    Debug.Log("Clicked!");
-
                     movePlane = new Plane(Vector3.up, transform.position + Vector3.up * heightWhenDragged);
 
                     rigid.useGravity = false;
@@ -59,8 +57,6 @@ public class Dice : MonoBehaviour
         }
         if (Input.GetMouseButtonUp(0) && beingDragged)
         {
-            Debug.Log("Released!");
-
             beingDragged = false;
             rigid.useGravity = true;
         }

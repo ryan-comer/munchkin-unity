@@ -12,6 +12,7 @@ public class Card : MonoBehaviour
     public bool isInHand;   //is the card in your hand
 
     private bool isDragging;
+    private bool isFaceDown;
 
     // Start is called before the first frame update
     void Start()
@@ -71,9 +72,22 @@ public class Card : MonoBehaviour
     }
 
     // Card was released
-    private void OnMouseUp()
+    void OnMouseUp()
     {
         isDragging = false;
+    }
+
+    private void OnMouseEnter()
+    {
+        if (!isFaceDown)
+        {
+            UIController.instance.ShowCardDetails(this);
+        }
+    }
+
+    private void OnMouseExit()
+    {
+        UIController.instance.HideCardDetails();
     }
 
 }

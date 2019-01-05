@@ -8,10 +8,6 @@ public class GameController : MonoBehaviour
     void Start()
     {
         shuffleAllDecks();
-
-        HandController.instance.AddCardToHand(DeckController.instance.DrawCard(DeckController.CardType.Door));
-        HandController.instance.AddCardToHand(DeckController.instance.DrawCard(DeckController.CardType.Door));
-        HandController.instance.AddCardToHand(DeckController.instance.DrawCard(DeckController.CardType.Door));
     }
 
     // Update is called once per frame

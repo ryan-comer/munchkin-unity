@@ -36,6 +36,7 @@ public class HandController : MonoBehaviour
 
     // Add a card to your hand
     public void AddCardToHand(Card card){
+        card.isInHand = true;
         currentHand.Add(card);
         redrawHand();
     }
@@ -43,6 +44,7 @@ public class HandController : MonoBehaviour
     // Remove the card from the hand
     // TODO: Test for duplicate cards in different hand locations
     public void RemoveCardFromHand(Card card){
+        card.isInHand = false;
         currentHand.Remove(card);
         redrawHand();
     }

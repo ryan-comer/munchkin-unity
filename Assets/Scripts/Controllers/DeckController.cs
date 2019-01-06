@@ -12,9 +12,16 @@ public class DeckController : MonoBehaviour
     public Transform doorDeckLocation;
     public Transform treasureDeckLocation;
 
+    public DiscardPile doorDiscardPile;
+    public DiscardPile treasureDiscardPile;
+
     private List<Card> currentDoorDeck = new List<Card>();
     private List<Card> currentTreasureDeck = new List<Card>();
     private List<Card> currentPlayerDeck = new List<Card>();
+
+    // Maximum cards for each deck
+    private int maxDoorCards;
+    private int maxTreasureCards;
 
     private int doorDeckStartingSize;
 
@@ -85,6 +92,33 @@ public class DeckController : MonoBehaviour
         }
     }
 
+    // Get the maximum number of cards for the card type
+    public int GetMaxCards(CardType cardType)
+    {
+        switch (cardType)
+        {
+            case CardType.Door:
+                return maxDoorCards;
+            case CardType.Treasure:
+                return maxTreasureCards;
+        }
+
+        return 0;
+    }
+
+    // Add the card to the discard pile
+    public void DiscardCard(Card card)
+    {
+        switch (card.cardType)
+        {
+            case CardType.Door:
+                card.transform.position = doorDeckLocation.position;
+                card.gameObject.SetActive(false);
+                doorDiscardPile.AddCard(card);
+                break;
+        }
+    }
+
     // Create the card objects for each card
     private void initializeDecks()
     {
@@ -95,6 +129,13 @@ public class DeckController : MonoBehaviour
             cardObj.cardType = CardType.Door;   // Type of this card
             cardObj.gameObject.SetActive(false);    // Cards in the deck are hidden
             currentDoorDeck.Add(cardObj);
+        }
+        maxDoorCards = currentDoorDeck.Count;
+
+        // Initialize the treasure deck
+        foreach(Card card in treasureDeck)
+        {
+
         }
     }
 

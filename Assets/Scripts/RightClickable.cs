@@ -5,13 +5,14 @@ using UnityEngine;
 public class RightClickable : MonoBehaviour
 {
 
-    public Canvas canvas;
     public RectTransform contextMenu_p;
+
+    private Canvas canvas;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        canvas = GameObject.FindObjectOfType<Canvas>();
     }
 
     // Update is called once per frame

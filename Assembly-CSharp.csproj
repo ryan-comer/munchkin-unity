@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Controllers\HandController.cs" />
     <Compile Include="Assets\Scripts\Controllers\UIController.cs" />
     <Compile Include="Assets\Scripts\Dice.cs" />
+    <Compile Include="Assets\Scripts\DiscardPile.cs" />
     <Compile Include="Assets\Scripts\DoorDeck.cs" />
     <Compile Include="Assets\Scripts\MatchWidthofViewport.cs" />
     <Compile Include="Assets\Scripts\RightClickable.cs" />

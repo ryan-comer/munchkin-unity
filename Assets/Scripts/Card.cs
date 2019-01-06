@@ -10,7 +10,8 @@ public class Card : MonoBehaviour
     public DeckController.CardType cardType;    // The type of this card
 
     public int numInDeck = 1;
-    public bool isInHand;   //is the card in your hand
+    public bool isInHand;   // Is the card in your hand
+    public bool isInDiscard;    // Is this card in the discard pile
 
     private bool isDragging;
     private bool isFaceDown;
@@ -69,12 +70,21 @@ public class Card : MonoBehaviour
     // Place the card in the discard pile
     public void Discard()
     {
+        if (isInHand)
+        {
+            HandController.instance.RemoveCardFromHand(this);
+        }
 
+        DeckController.instance.DiscardCard(this);
     }
 
     // Return this card to its deck
     public void ReturnToDeck()
     {
+        if (isInHand)
+        {
+            HandController.instance.RemoveCardFromHand(this);
+        }
         DeckController.instance.ReturnCard(this);
     }
 

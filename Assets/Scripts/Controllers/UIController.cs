@@ -8,6 +8,8 @@ public class UIController : MonoBehaviour
 
     public RectTransform cardDetailsSlot;   // Where the card details will go
 
+    public Button[] doorDeckButtons;    // Context menu options for the door deck
+
     public static UIController instance;
 
     private void Awake()
@@ -47,7 +49,7 @@ public class UIController : MonoBehaviour
     // User right clicked on the door deck
     public void DoorDeckRightClick()
     {
-        // Create a context menu to choose from
+
     }
 
 }

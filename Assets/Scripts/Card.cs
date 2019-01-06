@@ -79,7 +79,7 @@ public class Card : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if (!isFaceDown)
+        if (!isFaceDown && !isDragging)
         {
             UIController.instance.ShowCardDetails(this);
         }

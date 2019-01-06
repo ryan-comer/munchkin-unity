@@ -16,6 +16,8 @@ public class DeckController : MonoBehaviour
     private List<Card> currentTreasureDeck = new List<Card>();
     private List<Card> currentPlayerDeck = new List<Card>();
 
+    private int doorDeckStartingSize;
+
     public static DeckController instance;
 
     // Card types for the game
@@ -30,6 +32,11 @@ public class DeckController : MonoBehaviour
         instance = this;
 
         initializeDecks();
+    }
+
+    private void Start()
+    {
+        doorDeckStartingSize = currentDoorDeck.Count;
     }
 
     // Shuffle the appropriate deck
@@ -47,10 +54,17 @@ public class DeckController : MonoBehaviour
         switch (cardType)
         {
             case CardType.Door:
+                // The door deck is empty
+                if (currentDoorDeck.Count == 0)
+                {
+                    return null;
+                }
+
                 Card returnCard = currentDoorDeck[0];
                 returnCard.gameObject.SetActive(true);
 
                 currentDoorDeck.RemoveAt(0);
+                updateDeckSize(cardType);
                 return returnCard;
         }
 
@@ -66,6 +80,18 @@ public class DeckController : MonoBehaviour
             var cardObj = Instantiate(card, doorDeckLocation.position, Quaternion.identity);
             cardObj.gameObject.SetActive(false);    // Cards in the deck are hidden
             currentDoorDeck.Add(cardObj);
+        }
+    }
+
+    // Update the height of the deck
+    private void updateDeckSize(CardType cardType)
+    {
+        switch (cardType)
+        {
+            case CardType.Door:
+                float newScaleY = (float)currentDoorDeck.Count / (float)doorDeckStartingSize;
+                doorDeckLocation.localScale = new Vector3(doorDeckLocation.localScale.x, newScaleY, doorDeckLocation.localScale.z);
+                break;
         }
     }
 

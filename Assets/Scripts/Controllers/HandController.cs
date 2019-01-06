@@ -28,10 +28,7 @@ public class HandController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            AddCardToHand(DeckController.instance.DrawCard(DeckController.CardType.Door));
-        }
+
     }
 
     // Add a card to your hand

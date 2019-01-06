@@ -71,6 +71,20 @@ public class DeckController : MonoBehaviour
         return null;
     }
 
+    // Put the card back on the top of the deck
+    public void ReturnCard(Card card)
+    {
+        switch (card.cardType)
+        {
+            case CardType.Door:
+                currentDoorDeck.Insert(0, card);
+                card.transform.position = doorDeckLocation.position;
+                card.gameObject.SetActive(false);
+                updateDeckSize(CardType.Door);
+                break;
+        }
+    }
+
     // Create the card objects for each card
     private void initializeDecks()
     {
@@ -78,6 +92,7 @@ public class DeckController : MonoBehaviour
         foreach(Card card in doorDeck)
         {
             var cardObj = Instantiate(card, doorDeckLocation.position, Quaternion.identity);
+            cardObj.cardType = CardType.Door;   // Type of this card
             cardObj.gameObject.SetActive(false);    // Cards in the deck are hidden
             currentDoorDeck.Add(cardObj);
         }

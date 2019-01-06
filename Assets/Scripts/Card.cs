@@ -7,6 +7,7 @@ public class Card : MonoBehaviour
 
     public Texture frontTexture;
     public int playerOwner = -1; // The player that owns this card
+    public DeckController.CardType cardType;    // The type of this card
 
     public int numInDeck = 1;
     public bool isInHand;   //is the card in your hand
@@ -63,6 +64,18 @@ public class Card : MonoBehaviour
         {
             HandController.instance.AddCardToHand(this);
         }
+    }
+
+    // Place the card in the discard pile
+    public void Discard()
+    {
+
+    }
+
+    // Return this card to its deck
+    public void ReturnToDeck()
+    {
+        DeckController.instance.ReturnCard(this);
     }
 
     // Card was clicked

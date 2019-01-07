@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\DoorDeck.cs" />
     <Compile Include="Assets\Scripts\MatchWidthofViewport.cs" />
     <Compile Include="Assets\Scripts\RightClickable.cs" />
+    <Compile Include="Assets\Scripts\TreasureDeck.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/Ryan Comer/Documents/Munchkin/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

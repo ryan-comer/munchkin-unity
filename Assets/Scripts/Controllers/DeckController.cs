@@ -24,6 +24,7 @@ public class DeckController : MonoBehaviour
     private int maxTreasureCards;
 
     private int doorDeckStartingSize;
+    private int treasureDeckStartingSize;
 
     public static DeckController instance;
 
@@ -44,6 +45,7 @@ public class DeckController : MonoBehaviour
     private void Start()
     {
         doorDeckStartingSize = currentDoorDeck.Count;
+        treasureDeckStartingSize = currentTreasureDeck.Count;
     }
 
     // Shuffle the appropriate deck
@@ -52,6 +54,9 @@ public class DeckController : MonoBehaviour
         {
             case CardType.Door:
                 currentDoorDeck.Shuffle<Card>();
+                break;
+            case CardType.Treasure:
+                currentTreasureDeck.Shuffle<Card>();
                 break;
         }
     }
@@ -73,6 +78,20 @@ public class DeckController : MonoBehaviour
                 currentDoorDeck.RemoveAt(0);
                 updateDeckSize(cardType);
                 return returnCard;
+            case CardType.Treasure:
+                // Treasure deck is empty
+                if(currentTreasureDeck.Count == 0)
+                {
+                    return null;
+                }
+
+                returnCard = currentTreasureDeck[0];
+                returnCard.gameObject.SetActive(true);
+
+                currentTreasureDeck.RemoveAt(0);
+                updateDeckSize(cardType);
+                return returnCard;
+
         }
 
         return null;
@@ -88,6 +107,12 @@ public class DeckController : MonoBehaviour
                 card.transform.position = doorDeckLocation.position;
                 card.gameObject.SetActive(false);
                 updateDeckSize(CardType.Door);
+                break;
+            case CardType.Treasure:
+                currentTreasureDeck.Insert(0, card);
+                card.transform.position = treasureDeckLocation.position;
+                card.gameObject.SetActive(false);
+                updateDeckSize(CardType.Treasure);
                 break;
         }
     }
@@ -116,6 +141,11 @@ public class DeckController : MonoBehaviour
                 card.gameObject.SetActive(false);
                 doorDiscardPile.AddCard(card);
                 break;
+            case CardType.Treasure:
+                card.transform.position = treasureDeckLocation.position;
+                card.gameObject.SetActive(false);
+                treasureDiscardPile.AddCard(card);
+                break;
         }
     }
 
@@ -135,8 +165,12 @@ public class DeckController : MonoBehaviour
         // Initialize the treasure deck
         foreach(Card card in treasureDeck)
         {
-
+            var cardObj = Instantiate(card, treasureDeckLocation.position, Quaternion.identity);
+            cardObj.cardType = CardType.Treasure;
+            cardObj.gameObject.SetActive(false);
+            currentTreasureDeck.Add(cardObj);
         }
+        maxTreasureCards = currentTreasureDeck.Count;
     }
 
     // Update the height of the deck
@@ -147,6 +181,10 @@ public class DeckController : MonoBehaviour
             case CardType.Door:
                 float newScaleY = (float)currentDoorDeck.Count / (float)doorDeckStartingSize;
                 doorDeckLocation.localScale = new Vector3(doorDeckLocation.localScale.x, newScaleY, doorDeckLocation.localScale.z);
+                break;
+            case CardType.Treasure:
+                newScaleY = (float)currentTreasureDeck.Count / (float)treasureDeckStartingSize;
+                treasureDeckLocation.localScale = new Vector3(treasureDeckLocation.localScale.x, newScaleY, treasureDeckLocation.localScale.z);
                 break;
         }
     }

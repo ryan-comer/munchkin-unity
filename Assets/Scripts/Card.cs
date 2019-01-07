@@ -75,6 +75,7 @@ public class Card : MonoBehaviour
             HandController.instance.RemoveCardFromHand(this);
         }
 
+        UIController.instance.HideCardDetails();
         DeckController.instance.DiscardCard(this);
     }
 

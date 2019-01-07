@@ -70,6 +70,10 @@
     <Compile Include="Assets\Scripts\DiscardPile.cs" />
     <Compile Include="Assets\Scripts\DoorDeck.cs" />
     <Compile Include="Assets\Scripts\MatchWidthofViewport.cs" />
+    <Compile Include="Assets\Scripts\Networking\MunchkinLobbyManager.cs" />
+    <Compile Include="Assets\Scripts\Networking\MunchkinLobbyPlayer.cs" />
+    <Compile Include="Assets\Scripts\Networking\MunchkinNetworkManager.cs" />
+    <Compile Include="Assets\Scripts\Networking\MunchkinPlayer.cs" />
     <Compile Include="Assets\Scripts\RightClickable.cs" />
     <Compile Include="Assets\Scripts\TreasureDeck.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">

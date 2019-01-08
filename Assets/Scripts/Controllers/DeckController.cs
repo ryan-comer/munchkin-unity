@@ -12,6 +12,8 @@ public class DeckController : MonoBehaviour
     public Transform doorDeckLocation;
     public Transform treasureDeckLocation;
 
+    public Material[] playerMaterials;  // The materials to apply to the border of cards for each player
+
     public DiscardPile doorDiscardPile;
     public DiscardPile treasureDiscardPile;
 
@@ -63,6 +65,8 @@ public class DeckController : MonoBehaviour
 
     // Draw the top card from the top of the deck
     public Card DrawCard(CardType cardType){
+        int playerID = MunchkinPlayer.instance.playerID;
+
         switch (cardType)
         {
             case CardType.Door:
@@ -74,6 +78,9 @@ public class DeckController : MonoBehaviour
 
                 Card returnCard = currentDoorDeck[0];
                 returnCard.gameObject.SetActive(true);
+
+                // Set the border materials
+                setupBorderMaterials(returnCard, playerID);
 
                 currentDoorDeck.RemoveAt(0);
                 updateDeckSize(cardType);
@@ -87,6 +94,9 @@ public class DeckController : MonoBehaviour
 
                 returnCard = currentTreasureDeck[0];
                 returnCard.gameObject.SetActive(true);
+
+                // Set the border materials
+                setupBorderMaterials(returnCard, playerID);
 
                 currentTreasureDeck.RemoveAt(0);
                 updateDeckSize(cardType);
@@ -153,11 +163,12 @@ public class DeckController : MonoBehaviour
     private void initializeDecks()
     {
         // Initialize door deck
-        foreach(Card card in doorDeck)
+        foreach (Card card in doorDeck)
         {
             var cardObj = Instantiate(card, doorDeckLocation.position, Quaternion.identity);
             cardObj.cardType = CardType.Door;   // Type of this card
-            cardObj.gameObject.SetActive(false);    // Cards in the deck are hidden
+            cardObj.gameObject.SetActive(false);    // Cards in the deck are hidden'
+
             currentDoorDeck.Add(cardObj);
         }
         maxDoorCards = currentDoorDeck.Count;
@@ -168,9 +179,61 @@ public class DeckController : MonoBehaviour
             var cardObj = Instantiate(card, treasureDeckLocation.position, Quaternion.identity);
             cardObj.cardType = CardType.Treasure;
             cardObj.gameObject.SetActive(false);
+
             currentTreasureDeck.Add(cardObj);
         }
         maxTreasureCards = currentTreasureDeck.Count;
+    }
+
+    // Setup the border materials for the card
+    private void setupBorderMaterials(Card card, int playerID)
+    {
+        Transform border = card.transform.Find("border");
+        switch (playerID)
+        {
+            // Red
+            case 0:
+                for(int i = 0; i < 4; i++)
+                {
+                    border.GetChild(i).GetComponent<MeshRenderer>().material = playerMaterials[0];
+                }
+                break;
+            // Blue
+            case 1:
+                for (int i = 0; i < 4; i++)
+                {
+                    border.GetChild(i).GetComponent<MeshRenderer>().material = playerMaterials[1];
+                }
+                break;
+            // Green
+            case 2:
+                for (int i = 0; i < 4; i++)
+                {
+                    border.GetChild(i).GetComponent<MeshRenderer>().material = playerMaterials[2];
+                }
+                break;
+            // Orange
+            case 3:
+                for (int i = 0; i < 4; i++)
+                {
+                    border.GetChild(i).GetComponent<MeshRenderer>().material = playerMaterials[3];
+                }
+                break;
+            // Teal
+            case 4:
+                for (int i = 0; i < 4; i++)
+                {
+                    border.GetChild(i).GetComponent<MeshRenderer>().material = playerMaterials[4];
+                }
+                break;
+            // Yellow
+            case 5:
+                for (int i = 0; i < 4; i++)
+                {
+                    border.GetChild(i).GetComponent<MeshRenderer>().material = playerMaterials[5];
+                }
+                break;
+        }
     }
 
     // Update the height of the deck

@@ -6,6 +6,8 @@ using UnityEngine.Networking;
 public class MunchkinLobbyPlayer : NetworkLobbyPlayer
 {
 
+    public int playerID;
+
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -14,12 +16,19 @@ public class MunchkinLobbyPlayer : NetworkLobbyPlayer
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public override void OnClientEnterLobby()
+    {
+        base.OnClientEnterLobby();
+
+        playerID = slot;
     }
 }

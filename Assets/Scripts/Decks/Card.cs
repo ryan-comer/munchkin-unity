@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Card : MonoBehaviour
+public class Card : NetworkBehaviour
 {
 
     public Texture frontTexture;
@@ -19,7 +20,8 @@ public class Card : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        // Start off disabled
+        disable();
     }
 
     // Update is called once per frame
@@ -67,6 +69,45 @@ public class Card : MonoBehaviour
         }
     }
 
+    // Enable the card - show the card
+    [ClientRpc]
+    public void RpcEnableCard()
+    {
+        GetComponent<RightClickable>().enabled = true;
+        GetComponent<BoxCollider>().enabled = true;
+
+        // Enable all mesh renderers
+        foreach(MeshRenderer mr in transform.GetComponentsInChildren<MeshRenderer>())
+        {
+            mr.enabled = true;
+        }
+    }
+
+    // Disable the card - hide the card
+    [ClientRpc]
+    public void RpcDisableCard()
+    {
+        GetComponent<RightClickable>().enabled = false;
+        GetComponent<BoxCollider>().enabled = false;
+
+        // Disable all mesh renderers
+        foreach(MeshRenderer mr in transform.GetComponentsInChildren<MeshRenderer>())
+        {
+            mr.enabled = false;
+        }
+    }
+
+    // Set the border colors for the card
+    [ClientRpc]
+    public void RpcSetBorderColor(int materialIndex)
+    {
+        Transform border = transform.Find("border");
+        for(int i = 0; i < 4; i++)
+        {
+            border.GetChild(i).GetComponent<MeshRenderer>().material = DeckController.instance.playerMaterials[materialIndex];
+        }
+    }
+
     // Place the card in the discard pile
     public void Discard()
     {
@@ -76,7 +117,7 @@ public class Card : MonoBehaviour
         }
 
         UIController.instance.HideCardDetails();
-        DeckController.instance.DiscardCard(this);
+        //DeckController.instance.DiscardCard(this);
     }
 
     // Return this card to its deck
@@ -87,6 +128,19 @@ public class Card : MonoBehaviour
             HandController.instance.RemoveCardFromHand(this);
         }
         DeckController.instance.ReturnCard(this);
+    }
+
+    // Local function to disable the card
+    private void disable()
+    {
+        GetComponent<RightClickable>().enabled = false;
+        GetComponent<BoxCollider>().enabled = false;
+
+        // Disable all mesh renderers
+        foreach (MeshRenderer mr in transform.GetComponentsInChildren<MeshRenderer>())
+        {
+            mr.enabled = false;
+        }
     }
 
     // Card was clicked

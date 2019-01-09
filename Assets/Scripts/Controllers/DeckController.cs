@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class DeckController : MonoBehaviour
+public class DeckController : NetworkBehaviour
 {
 
     public Card[] doorDeck;    // The deck of door cards
@@ -22,11 +23,18 @@ public class DeckController : MonoBehaviour
     private List<Card> currentPlayerDeck = new List<Card>();
 
     // Maximum cards for each deck
-    private int maxDoorCards;
-    private int maxTreasureCards;
-
+    [SyncVar]
     private int doorDeckStartingSize;
+    [SyncVar]
     private int treasureDeckStartingSize;
+    [SyncVar]
+    private int currentDoorDeckSize;
+    [SyncVar]
+    private int currentTreasureDeckSize;
+
+    // Optimization - only update deck size if these variables changed
+    private int lastCurrentDoorSize = 0;
+    private int lastCurrentTreasureDeckSize = 0;
 
     public static DeckController instance;
 
@@ -40,14 +48,24 @@ public class DeckController : MonoBehaviour
     private void Awake()
     {
         instance = this;
-
-        initializeDecks();
     }
 
     private void Start()
     {
-        doorDeckStartingSize = currentDoorDeck.Count;
-        treasureDeckStartingSize = currentTreasureDeck.Count;
+        // Only run on server
+        if (NetworkServer.active)
+        {
+            initializeDecks();
+            doorDeckStartingSize = currentDoorDeck.Count;
+            treasureDeckStartingSize = currentTreasureDeck.Count;
+        }
+    }
+
+    private void Update()
+    {
+        // Update the size of each deck
+        updateDeckSize(CardType.Door);
+        updateDeckSize(CardType.Treasure);
     }
 
     // Shuffle the appropriate deck
@@ -64,9 +82,7 @@ public class DeckController : MonoBehaviour
     }
 
     // Draw the top card from the top of the deck
-    public Card DrawCard(CardType cardType){
-        int playerID = MunchkinPlayer.instance.playerID;
-
+    public Card DrawCard(CardType cardType, int playerID){
         switch (cardType)
         {
             case CardType.Door:
@@ -77,13 +93,13 @@ public class DeckController : MonoBehaviour
                 }
 
                 Card returnCard = currentDoorDeck[0];
-                returnCard.gameObject.SetActive(true);
+                returnCard.RpcEnableCard();
 
                 // Set the border materials
-                setupBorderMaterials(returnCard, playerID);
+                returnCard.RpcSetBorderColor(playerID);
 
                 currentDoorDeck.RemoveAt(0);
-                updateDeckSize(cardType);
+                currentDoorDeckSize = currentDoorDeck.Count;
                 return returnCard;
             case CardType.Treasure:
                 // Treasure deck is empty
@@ -93,13 +109,13 @@ public class DeckController : MonoBehaviour
                 }
 
                 returnCard = currentTreasureDeck[0];
-                returnCard.gameObject.SetActive(true);
+                returnCard.RpcEnableCard();
 
                 // Set the border materials
-                setupBorderMaterials(returnCard, playerID);
+                returnCard.RpcSetBorderColor(playerID);
 
                 currentTreasureDeck.RemoveAt(0);
-                updateDeckSize(cardType);
+                currentTreasureDeckSize = currentTreasureDeck.Count;
                 return returnCard;
 
         }
@@ -116,13 +132,13 @@ public class DeckController : MonoBehaviour
                 currentDoorDeck.Insert(0, card);
                 card.transform.position = doorDeckLocation.position;
                 card.gameObject.SetActive(false);
-                updateDeckSize(CardType.Door);
+                //updateDeckSize(CardType.Door);
                 break;
             case CardType.Treasure:
                 currentTreasureDeck.Insert(0, card);
                 card.transform.position = treasureDeckLocation.position;
                 card.gameObject.SetActive(false);
-                updateDeckSize(CardType.Treasure);
+                //updateDeckSize(CardType.Treasure);
                 break;
         }
     }
@@ -133,16 +149,16 @@ public class DeckController : MonoBehaviour
         switch (cardType)
         {
             case CardType.Door:
-                return maxDoorCards;
+                return doorDeckStartingSize;
             case CardType.Treasure:
-                return maxTreasureCards;
+                return treasureDeckStartingSize;
         }
 
         return 0;
     }
 
     // Add the card to the discard pile
-    public void DiscardCard(Card card)
+    /*public void DiscardCard(Card card)
     {
         switch (card.cardType)
         {
@@ -157,9 +173,10 @@ public class DeckController : MonoBehaviour
                 treasureDiscardPile.AddCard(card);
                 break;
         }
-    }
+    }*/
 
     // Create the card objects for each card
+    // Send the results to each client
     private void initializeDecks()
     {
         // Initialize door deck
@@ -167,73 +184,23 @@ public class DeckController : MonoBehaviour
         {
             var cardObj = Instantiate(card, doorDeckLocation.position, Quaternion.identity);
             cardObj.cardType = CardType.Door;   // Type of this card
-            cardObj.gameObject.SetActive(false);    // Cards in the deck are hidden'
+            NetworkServer.Spawn(cardObj.gameObject);
 
             currentDoorDeck.Add(cardObj);
         }
-        maxDoorCards = currentDoorDeck.Count;
+        currentDoorDeckSize = currentDoorDeck.Count;
 
         // Initialize the treasure deck
         foreach(Card card in treasureDeck)
         {
             var cardObj = Instantiate(card, treasureDeckLocation.position, Quaternion.identity);
             cardObj.cardType = CardType.Treasure;
-            cardObj.gameObject.SetActive(false);
+            NetworkServer.Spawn(cardObj.gameObject);
 
             currentTreasureDeck.Add(cardObj);
         }
-        maxTreasureCards = currentTreasureDeck.Count;
-    }
+        currentTreasureDeckSize = currentTreasureDeck.Count;
 
-    // Setup the border materials for the card
-    private void setupBorderMaterials(Card card, int playerID)
-    {
-        Transform border = card.transform.Find("border");
-        switch (playerID)
-        {
-            // Red
-            case 0:
-                for(int i = 0; i < 4; i++)
-                {
-                    border.GetChild(i).GetComponent<MeshRenderer>().material = playerMaterials[0];
-                }
-                break;
-            // Blue
-            case 1:
-                for (int i = 0; i < 4; i++)
-                {
-                    border.GetChild(i).GetComponent<MeshRenderer>().material = playerMaterials[1];
-                }
-                break;
-            // Green
-            case 2:
-                for (int i = 0; i < 4; i++)
-                {
-                    border.GetChild(i).GetComponent<MeshRenderer>().material = playerMaterials[2];
-                }
-                break;
-            // Orange
-            case 3:
-                for (int i = 0; i < 4; i++)
-                {
-                    border.GetChild(i).GetComponent<MeshRenderer>().material = playerMaterials[3];
-                }
-                break;
-            // Teal
-            case 4:
-                for (int i = 0; i < 4; i++)
-                {
-                    border.GetChild(i).GetComponent<MeshRenderer>().material = playerMaterials[4];
-                }
-                break;
-            // Yellow
-            case 5:
-                for (int i = 0; i < 4; i++)
-                {
-                    border.GetChild(i).GetComponent<MeshRenderer>().material = playerMaterials[5];
-                }
-                break;
-        }
     }
 
     // Update the height of the deck
@@ -242,12 +209,28 @@ public class DeckController : MonoBehaviour
         switch (cardType)
         {
             case CardType.Door:
-                float newScaleY = (float)currentDoorDeck.Count / (float)doorDeckStartingSize;
+                // If there is no change, don't update
+                if(currentDoorDeckSize == lastCurrentDoorSize)
+                {
+                    return;
+                }
+
+                float newScaleY = (float)currentDoorDeckSize / (float)doorDeckStartingSize;
                 doorDeckLocation.localScale = new Vector3(doorDeckLocation.localScale.x, newScaleY, doorDeckLocation.localScale.z);
+
+                lastCurrentDoorSize = currentDoorDeckSize;
                 break;
             case CardType.Treasure:
-                newScaleY = (float)currentTreasureDeck.Count / (float)treasureDeckStartingSize;
+                // If there is no change, don't update
+                if (currentTreasureDeckSize == lastCurrentTreasureDeckSize)
+                {
+                    return;
+                }
+
+                newScaleY = (float)currentTreasureDeckSize / (float)treasureDeckStartingSize;
                 treasureDeckLocation.localScale = new Vector3(treasureDeckLocation.localScale.x, newScaleY, treasureDeckLocation.localScale.z);
+
+                lastCurrentTreasureDeckSize = currentTreasureDeckSize;
                 break;
         }
     }

@@ -1,19 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class GameController : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
-        shuffleAllDecks();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        // Only run on server
+        if (NetworkServer.active)
+        {
+            shuffleAllDecks();
+        }
     }
 
     // Shuffle all of the decks

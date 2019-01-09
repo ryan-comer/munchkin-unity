@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\Editor\SetupCardPrefabs.cs" />
     <Compile Include="Assets\Editor\SetupDeckEditor.cs" />
+    <Compile Include="Assets\Editor\SetupLobbyManagerEditor.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/Ryan Comer/Documents/Munchkin/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>

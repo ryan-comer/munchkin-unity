@@ -98,6 +98,9 @@ public class DeckController : NetworkBehaviour
                 // Set the border materials
                 returnCard.RpcSetBorderColor(playerID);
 
+                // Assign authority
+                returnCard.SetPlayerAuthority(MunchkinLobbyManager.instance.connectionsDict[playerID]);
+
                 currentDoorDeck.RemoveAt(0);
                 currentDoorDeckSize = currentDoorDeck.Count;
                 return returnCard;
@@ -113,6 +116,9 @@ public class DeckController : NetworkBehaviour
 
                 // Set the border materials
                 returnCard.RpcSetBorderColor(playerID);
+
+                // Assign authority
+                returnCard.SetPlayerAuthority(MunchkinLobbyManager.instance.connectionsDict[playerID]);
 
                 currentTreasureDeck.RemoveAt(0);
                 currentTreasureDeckSize = currentTreasureDeck.Count;

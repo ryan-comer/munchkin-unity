@@ -8,6 +8,8 @@ public class MunchkinLobbyManager : NetworkLobbyManager
 
     public static MunchkinLobbyManager instance;
 
+    public Dictionary<int, NetworkConnection> connectionsDict = new Dictionary<int, NetworkConnection>();
+
     void Awake()
     {
         instance = this;
@@ -32,6 +34,7 @@ public class MunchkinLobbyManager : NetworkLobbyManager
         MunchkinPlayer munchkinPlayer = gamePlayer.GetComponent<MunchkinPlayer>();
 
         munchkinPlayer.playerID = munchkinLobbyPlayer.playerID;
+
         return true;
     }
 

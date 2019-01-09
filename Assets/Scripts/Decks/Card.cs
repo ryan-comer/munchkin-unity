@@ -108,6 +108,12 @@ public class Card : NetworkBehaviour
         }
     }
 
+    // Set the player authority for this object
+    public void SetPlayerAuthority(NetworkConnection conn)
+    {
+        GetComponent<NetworkIdentity>().AssignClientAuthority(conn);
+    }
+
     // Place the card in the discard pile
     public void Discard()
     {

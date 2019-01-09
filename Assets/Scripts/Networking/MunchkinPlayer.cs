@@ -44,7 +44,20 @@ public class MunchkinPlayer : NetworkBehaviour
     public override void OnStartLocalPlayer()
     {
         instance = this;
+
         base.OnStartLocalPlayer();
+    }
+
+    public override void OnStartServer()
+    {
+        // Add connection to the manager
+        if (isServer)
+        {
+            Debug.Log("Adding connection for: " + playerID);
+            MunchkinLobbyManager.instance.connectionsDict[playerID] = GetComponent<NetworkIdentity>().connectionToClient;
+        }
+
+        base.OnStartServer();
     }
 
 }

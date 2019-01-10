@@ -43,6 +43,23 @@ public class MunchkinPlayer : NetworkBehaviour
         HandController.instance.AddCardToHand(newCard.GetComponent<Card>());
     }
 
+    // Called by a client that wants authority over the dice
+    [Command]
+    public void CmdRequestDiceControl()
+    {
+        var diceNetID = GameController.instance.dice.GetComponent<NetworkIdentity>();
+        NetworkConnection playerConnection = MunchkinLobbyManager.instance.connectionsDict[playerID];
+
+        // Remove old authority if it has one
+        if(diceNetID.clientAuthorityOwner != null)
+        {
+            diceNetID.RemoveClientAuthority(diceNetID.clientAuthorityOwner);
+        }
+
+        diceNetID.AssignClientAuthority(playerConnection);
+    }
+
+    // Set up the static singleton
     public override void OnStartLocalPlayer()
     {
         instance = this;
@@ -55,7 +72,6 @@ public class MunchkinPlayer : NetworkBehaviour
         // Add connection to the manager
         if (isServer)
         {
-            Debug.Log("Adding connection for: " + playerID);
             MunchkinLobbyManager.instance.connectionsDict[playerID] = GetComponent<NetworkIdentity>().connectionToClient;
         }
 

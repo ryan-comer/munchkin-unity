@@ -115,7 +115,6 @@ public class Card : NetworkBehaviour
     {
         NetworkIdentity netId = GetComponent<NetworkIdentity>();
         GetComponent<NetworkIdentity>().AssignClientAuthority(conn);
-        Debug.Log(netId.clientAuthorityOwner);
     }
 
     // Place the card in the discard pile

@@ -48,6 +48,9 @@ public class Dice : MonoBehaviour
             {
                 if(hit.transform.root.transform == transform)
                 {
+                    // Request authority over the dice
+                    MunchkinPlayer.instance.CmdRequestDiceControl();
+
                     movePlane = new Plane(Vector3.up, transform.position + Vector3.up * heightWhenDragged);
 
                     rigid.useGravity = false;

@@ -83,6 +83,7 @@ public class DeckController : NetworkBehaviour
 
     // Draw the top card from the top of the deck
     public Card DrawCard(CardType cardType, int playerID){
+        Debug.Log("Drawing for: " + playerID);
         switch (cardType)
         {
             case CardType.Door:
@@ -99,6 +100,7 @@ public class DeckController : NetworkBehaviour
                 returnCard.RpcSetBorderColor(playerID);
 
                 // Assign authority
+                returnCard.playerOwner = playerID;
                 returnCard.SetPlayerAuthority(MunchkinLobbyManager.instance.connectionsDict[playerID]);
 
                 currentDoorDeck.RemoveAt(0);
@@ -118,6 +120,7 @@ public class DeckController : NetworkBehaviour
                 returnCard.RpcSetBorderColor(playerID);
 
                 // Assign authority
+                returnCard.playerOwner = playerID;
                 returnCard.SetPlayerAuthority(MunchkinLobbyManager.instance.connectionsDict[playerID]);
 
                 currentTreasureDeck.RemoveAt(0);

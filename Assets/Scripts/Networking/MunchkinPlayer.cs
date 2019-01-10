@@ -24,20 +24,22 @@ public class MunchkinPlayer : NetworkBehaviour
 
     // Send a command to the server to draw a card
     [Command]
-    public void CmdDrawCard(DeckController.CardType cardType, int playerID)
+    public void CmdDrawCard(DeckController.CardType cardType)
     {
         Card newCard = DeckController.instance.DrawCard(cardType, playerID);
-        RpcDrawCard(newCard.gameObject);
+        RpcDrawCard(newCard.gameObject, playerID);
     }
 
     [ClientRpc]
-    public void RpcDrawCard(GameObject newCard)
+    public void RpcDrawCard(GameObject newCard, int ID)
     {
+        newCard.GetComponent<Card>().playerOwner = ID;
+
         if (!isLocalPlayer)
         {
             return;
         }
-        Debug.Log(newCard);
+
         HandController.instance.AddCardToHand(newCard.GetComponent<Card>());
     }
 

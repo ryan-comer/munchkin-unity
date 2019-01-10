@@ -22,7 +22,7 @@ public class DoorDeck : MonoBehaviour
     // Draw a card and put in the player's hand
     public void DrawCard()
     {
-        MunchkinPlayer.instance.CmdDrawCard(DeckController.CardType.Door, MunchkinPlayer.instance.playerID);
+        MunchkinPlayer.instance.CmdDrawCard(DeckController.CardType.Door);
     }
 
     // Place a card from the deck on the table

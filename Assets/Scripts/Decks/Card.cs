@@ -7,7 +7,9 @@ public class Card : NetworkBehaviour
 {
 
     public Texture frontTexture;
+
     public int playerOwner = -1; // The player that owns this card
+
     public DeckController.CardType cardType;    // The type of this card
 
     public int numInDeck = 1;
@@ -111,7 +113,9 @@ public class Card : NetworkBehaviour
     // Set the player authority for this object
     public void SetPlayerAuthority(NetworkConnection conn)
     {
+        NetworkIdentity netId = GetComponent<NetworkIdentity>();
         GetComponent<NetworkIdentity>().AssignClientAuthority(conn);
+        Debug.Log(netId.clientAuthorityOwner);
     }
 
     // Place the card in the discard pile
@@ -152,7 +156,10 @@ public class Card : NetworkBehaviour
     // Card was clicked
     void OnMouseDown()
     {
-        isDragging = true;
+        if (playerOwner == MunchkinPlayer.instance.playerID)
+        {
+            isDragging = true;
+        }
     }
 
     // Card was released

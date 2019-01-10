@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\Networking\MunchkinNetworkManager.cs" />
     <Compile Include="Assets\Scripts\Networking\MunchkinPlayer.cs" />
     <Compile Include="Assets\Scripts\RightClickable.cs" />
+    <Compile Include="Assets\Scripts\UI\HandUI.cs" />
     <None Include="Assets\Shaders\Silhouetted Diffuse.shader" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/Ryan Comer/Documents/Munchkin/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>

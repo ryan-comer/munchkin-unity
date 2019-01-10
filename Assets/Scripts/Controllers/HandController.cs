@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class HandController : MonoBehaviour
 {
+    public HandUI handUI;   // The UI controller for the hand
+
     public Vector3 cardRotationOffset;
 
     public float handDistanceFromCamera;    // How far away the hand is from the camera
@@ -35,7 +37,10 @@ public class HandController : MonoBehaviour
     public void AddCardToHand(Card card){
         card.isInHand = true;
         currentHand.Add(card);
-        redrawHand();
+
+        handUI.AddCard(card);   // Add to the UI handler for the hand
+
+        //redrawHand();
     }
 
     // Remove the card from the hand

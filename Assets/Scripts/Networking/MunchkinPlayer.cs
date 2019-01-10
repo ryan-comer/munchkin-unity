@@ -35,6 +35,7 @@ public class MunchkinPlayer : NetworkBehaviour
     {
         newCard.GetComponent<Card>().playerOwner = ID;
 
+        // Continue only if this is the local player
         if (!isLocalPlayer)
         {
             return;

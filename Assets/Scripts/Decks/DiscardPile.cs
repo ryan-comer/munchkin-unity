@@ -22,25 +22,37 @@ public class DiscardPile : NetworkBehaviour
         Material mat = new Material(Shader.Find("Legacy Shaders/Diffuse"));
         topCardImage.GetComponent<MeshRenderer>().material = mat;
 
-        updatePhysicalSize();
+        initializeSize();
 
         // Hide at the beginning
-        topCardImage.SetActive(false);
-        deck.GetComponent<MeshRenderer>().enabled = false;
+        hide();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    private void hide()
+    {
+        topCardImage.SetActive(false);
+        deck.GetComponent<MeshRenderer>().enabled = false;
+    }
+
+    private void show()
+    {
+        topCardImage.SetActive(true);
+        deck.GetComponent<MeshRenderer>().enabled = true;
     }
 
     // Add a card to this discard pile (Server)
-    [Command]
-    public void CmdAddCard(NetworkInstanceId cardNetworkID)
+    public void AddCard(Card card)
     {
-        // Get the card by the networkID
-        Card card = NetworkServer.FindLocalObject(cardNetworkID).GetComponent<Card>();
+        if (!isServer)
+        {
+            return;
+        }
 
         currentCards.Insert(0, card);
         currentCardCount = currentCards.Count;
@@ -50,17 +62,15 @@ public class DiscardPile : NetworkBehaviour
 
     // Client function for adding a card
     [ClientRpc]
-    private void RpcAddCard(GameObject card)
+    public void RpcAddCard(GameObject card)
     {
+        show();
+
         // Update the physical size
         updatePhysicalSize();
 
         // Update the front image
         updateTopCardImage(card);
-
-        // Make visible
-        topCardImage.SetActive(true);
-        deck.GetComponent<MeshRenderer>().enabled = true;
     }
 
     // Update the size of the discard pile
@@ -79,6 +89,14 @@ public class DiscardPile : NetworkBehaviour
 
                 break;
         }
+
+        transform.localScale = new Vector3(transform.localScale.x, newY, transform.localScale.z);
+    }
+
+    // Start off empty
+    private void initializeSize()
+    {
+        float newY = 0.0f;
 
         transform.localScale = new Vector3(transform.localScale.x, newY, transform.localScale.z);
     }

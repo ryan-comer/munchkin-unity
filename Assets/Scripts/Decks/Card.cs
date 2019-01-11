@@ -120,10 +120,14 @@ public class Card : NetworkBehaviour
         if (isInHand)
         {
             HandController.instance.RemoveCardFromHand(this);
+            HandController.instance.handUI.RemoveCard(this);
         }
 
         UIController.instance.HideCardDetails();
-        //DeckController.instance.DiscardCard(this);
+
+        // Send a command to discard the card
+        MunchkinPlayer.instance.CmdDiscardCard(netId);
+
     }
 
     // Return this card to its deck

@@ -43,13 +43,14 @@ public class UICard : MonoBehaviour
                 // Place the card
                 card.transform.position = new Vector3(hit.point.x, hit.point.y + 0.1f, hit.point.z);
                 card.transform.rotation = Quaternion.identity;
+                card.isDragging = true; // Start dragging so you can easily place
 
                 // Enable the card for the clients
                 MunchkinPlayer.instance.CmdEnableCard(card.netId);
 
                 // Remove the card from the hand controller and the UI manager
                 HandController.instance.RemoveCardFromHand(card);
-                HandController.instance.handUI.RemoveCard(GetComponent<Image>());
+                HandController.instance.handUI.RemoveCard(card);
             }
         }
     }

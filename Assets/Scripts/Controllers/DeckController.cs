@@ -170,22 +170,27 @@ public class DeckController : NetworkBehaviour
     }
 
     // Add the card to the discard pile
-    /*public void DiscardCard(Card card)
+    // TODO: Use this when discarding instead of directly calling discard pile
+    public void DiscardCard(Card card)
     {
+        // Remove the player authority
+        NetworkIdentity cardNetID = card.GetComponent<NetworkIdentity>();
+        cardNetID.RemoveClientAuthority(cardNetID.clientAuthorityOwner);
+
         switch (card.cardType)
         {
             case CardType.Door:
-                card.transform.position = doorDeckLocation.position;
-                card.gameObject.SetActive(false);
+                card.transform.position = disabledCardsLocation.position;
+                card.RpcDisableCard();
                 doorDiscardPile.AddCard(card);
                 break;
             case CardType.Treasure:
-                card.transform.position = treasureDeckLocation.position;
-                card.gameObject.SetActive(false);
+                card.transform.position = disabledCardsLocation.position;
+                card.RpcDisableCard();
                 treasureDiscardPile.AddCard(card);
                 break;
         }
-    }*/
+    }
 
     // Create the card objects for each card
     // Send the results to each client

@@ -11,6 +11,8 @@ public class HandUI : MonoBehaviour
 
     private Image[] cardImagesPool = new Image[40];
 
+    private Dictionary<Card, Image> cardImageDictionary = new Dictionary<Card, Image>();    // Dictionary to keep track of which cards have which UI image in your hand
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,11 +37,15 @@ public class HandUI : MonoBehaviour
         image.GetComponent<UICard>().isDragging = false;
 
         image.gameObject.SetActive(true);
+
+        // Add to the dictionary
+        cardImageDictionary[card] = image;
     }
 
     // Remove the card from the hand
-    public void RemoveCard(Image image)
+    public void RemoveCard(Card card)
     {
+        Image image = cardImageDictionary[card];
         image.gameObject.SetActive(false);
     }
 

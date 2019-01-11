@@ -44,6 +44,14 @@ public class MunchkinPlayer : NetworkBehaviour
         HandController.instance.AddCardToHand(newCard.GetComponent<Card>());
     }
 
+    [Command]
+    public void CmdDiscardCard(NetworkInstanceId cardID)
+    {
+        Card card = ClientScene.objects[cardID].GetComponent<Card>();
+
+        DeckController.instance.DiscardCard(card);
+    }
+
     // Called by a client that wants authority over the dice
     [Command]
     public void CmdRequestDiceControl()

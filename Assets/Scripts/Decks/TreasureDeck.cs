@@ -22,7 +22,7 @@ public class TreasureDeck : MonoBehaviour
     // Draw a card and put in the player's hand
     public void DrawCard()
     {
-
+        MunchkinPlayer.instance.CmdDrawCard(DeckController.CardType.Treasure);
     }
 
     // Place a card from the deck on the table

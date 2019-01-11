@@ -18,11 +18,7 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Only run on server
-        if (NetworkServer.active)
-        {
-            shuffleAllDecks();
-        }
+        
     }
 
     // Shuffle all of the decks

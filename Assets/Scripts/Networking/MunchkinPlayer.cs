@@ -60,6 +60,12 @@ public class MunchkinPlayer : NetworkBehaviour
         diceNetID.AssignClientAuthority(playerConnection);
     }
 
+    [Command]
+    public void CmdEnableCard(NetworkInstanceId cardID)
+    {
+        ClientScene.objects[cardID].GetComponent<Card>().RpcEnableCard();
+    }
+
     // Set up the static singleton
     public override void OnStartLocalPlayer()
     {

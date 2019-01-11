@@ -12,6 +12,7 @@ public class DeckController : NetworkBehaviour
 
     public Transform doorDeckLocation;
     public Transform treasureDeckLocation;
+    public Transform disabledCardsLocation;
 
     public Material[] playerMaterials;  // The materials to apply to the border of cards for each player
 
@@ -58,6 +59,10 @@ public class DeckController : NetworkBehaviour
             initializeDecks();
             doorDeckStartingSize = currentDoorDeck.Count;
             treasureDeckStartingSize = currentTreasureDeck.Count;
+
+            // Initially shuffle both decks
+            ShuffleDeck(CardType.Door);
+            ShuffleDeck(CardType.Treasure);
         }
     }
 
@@ -83,7 +88,6 @@ public class DeckController : NetworkBehaviour
 
     // Draw the top card from the top of the deck
     public Card DrawCard(CardType cardType, int playerID){
-        Debug.Log("Drawing for: " + playerID);
         switch (cardType)
         {
             case CardType.Door:
@@ -94,14 +98,8 @@ public class DeckController : NetworkBehaviour
                 }
 
                 Card returnCard = currentDoorDeck[0];
-                returnCard.RpcEnableCard();
 
-                // Set the border materials
-                returnCard.RpcSetBorderColor(playerID);
-
-                // Assign authority
-                returnCard.playerOwner = playerID;
-                returnCard.SetPlayerAuthority(MunchkinLobbyManager.instance.connectionsDict[playerID]);
+                AssignToPlayer(returnCard, playerID);
 
                 currentDoorDeck.RemoveAt(0);
                 currentDoorDeckSize = currentDoorDeck.Count;
@@ -114,14 +112,8 @@ public class DeckController : NetworkBehaviour
                 }
 
                 returnCard = currentTreasureDeck[0];
-                returnCard.RpcEnableCard();
 
-                // Set the border materials
-                returnCard.RpcSetBorderColor(playerID);
-
-                // Assign authority
-                returnCard.playerOwner = playerID;
-                returnCard.SetPlayerAuthority(MunchkinLobbyManager.instance.connectionsDict[playerID]);
+                AssignToPlayer(returnCard, playerID);
 
                 currentTreasureDeck.RemoveAt(0);
                 currentTreasureDeckSize = currentTreasureDeck.Count;
@@ -130,6 +122,17 @@ public class DeckController : NetworkBehaviour
         }
 
         return null;
+    }
+
+    // Assign this card to the player
+    public void AssignToPlayer(Card card, int playerID)
+    {
+        // Set the border materials
+        card.RpcSetBorderColor(playerID);
+
+        // Assign authority
+        card.playerOwner = playerID;
+        card.SetPlayerAuthority(MunchkinLobbyManager.instance.connectionsDict[playerID]);
     }
 
     // Put the card back on the top of the deck
@@ -191,7 +194,7 @@ public class DeckController : NetworkBehaviour
         // Initialize door deck
         foreach (Card card in doorDeck)
         {
-            var cardObj = Instantiate(card, doorDeckLocation.position, Quaternion.identity);
+            var cardObj = Instantiate(card, disabledCardsLocation.position, Quaternion.identity);
             cardObj.cardType = CardType.Door;   // Type of this card
             NetworkServer.Spawn(cardObj.gameObject);
 
@@ -202,7 +205,7 @@ public class DeckController : NetworkBehaviour
         // Initialize the treasure deck
         foreach(Card card in treasureDeck)
         {
-            var cardObj = Instantiate(card, treasureDeckLocation.position, Quaternion.identity);
+            var cardObj = Instantiate(card, disabledCardsLocation.position, Quaternion.identity);
             cardObj.cardType = CardType.Treasure;
             NetworkServer.Spawn(cardObj.gameObject);
 

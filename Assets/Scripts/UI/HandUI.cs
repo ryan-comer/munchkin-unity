@@ -7,6 +7,7 @@ public class HandUI : MonoBehaviour
 {
 
     public int minCardDistance; // The minimum distance that cards can be (number of pixels)
+    public Image cardUI_p;  // The image that will hold the card texture
 
     private Image[] cardImagesPool = new Image[40];
 
@@ -30,8 +31,16 @@ public class HandUI : MonoBehaviour
         // Create the sprite
         Sprite sprite = Sprite.Create((Texture2D)card.frontTexture, new Rect(0, 0, card.frontTexture.width, card.frontTexture.height), new Vector2(0.5f, 0.5f), 100);
         image.sprite = sprite;
+        image.GetComponent<UICard>().card = card;
+        image.GetComponent<UICard>().isDragging = false;
 
         image.gameObject.SetActive(true);
+    }
+
+    // Remove the card from the hand
+    public void RemoveCard(Image image)
+    {
+        image.gameObject.SetActive(false);
     }
 
     // Are the cards too close together
@@ -62,7 +71,7 @@ public class HandUI : MonoBehaviour
     {
         for(int i = 0; i < cardImagesPool.Length; i++)
         {
-            var obj = new GameObject(i.ToString(), typeof(Image)).GetComponent<Image>();
+            var obj = Instantiate(cardUI_p, transform);
             obj.preserveAspect = true;
             obj.gameObject.SetActive(false);
 

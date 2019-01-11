@@ -16,7 +16,8 @@ public class Card : NetworkBehaviour
     public bool isInHand;   // Is the card in your hand
     public bool isInDiscard;    // Is this card in the discard pile
 
-    private bool isDragging;
+    public bool isDragging;
+
     private bool isFaceDown;
 
     // Start is called before the first frame update
@@ -54,11 +55,6 @@ public class Card : NetworkBehaviour
                 transform.position = new Vector3(hit.point.x, hit.point.y + 0.1f, hit.point.z);
                 transform.rotation = Quaternion.identity;
 
-                if (isInHand)
-                {
-                    HandController.instance.RemoveCardFromHand(this);
-                }
-
                 hitTable = true;
                 break;
             }
@@ -68,6 +64,7 @@ public class Card : NetworkBehaviour
         if(!hitTable && !isInHand)
         {
             HandController.instance.AddCardToHand(this);
+            RpcDisableCard();
         }
     }
 

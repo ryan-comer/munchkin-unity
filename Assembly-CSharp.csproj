@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\Controllers\DeckController.cs" />
     <Compile Include="Assets\Scripts\Controllers\GameController.cs" />
     <Compile Include="Assets\Scripts\Controllers\HandController.cs" />
+    <Compile Include="Assets\Scripts\Controllers\PlayerCardsController.cs" />
     <Compile Include="Assets\Scripts\Controllers\UIController.cs" />
     <Compile Include="Assets\Scripts\Decks\Card.cs" />
     <Compile Include="Assets\Scripts\Decks\DiscardPile.cs" />

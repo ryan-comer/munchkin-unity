@@ -10,15 +10,10 @@ public class MunchkinLobbyManager : NetworkLobbyManager
 
     public Dictionary<int, NetworkConnection> connectionsDict = new Dictionary<int, NetworkConnection>();
 
-    void Awake()
-    {
-        instance = this;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
-        
+        StartMatchMaker();
     }
 
     // Update is called once per frame
@@ -36,6 +31,20 @@ public class MunchkinLobbyManager : NetworkLobbyManager
         munchkinPlayer.playerID = munchkinLobbyPlayer.playerID;
 
         return true;
+    }
+
+    // Client connected to the server
+    public override void OnClientConnect(NetworkConnection conn)
+    {
+        // Add a UI element for the player in the lobby
+        MainMenuController.instance.AddPlayerToLobby(conn);
+    }
+
+    // Client disconnected from the server
+    public override void OnClientDisconnect(NetworkConnection conn)
+    {
+        // Remove the player UI
+        MainMenuController.instance.RemovePlayerFromLobby(conn);
     }
 
 }
